@@ -1,10 +1,11 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
 using namespace std;
 int main() {
   // count代表輸入的數量，
-  int count = 0, len = 0;
+  int count = 0, len = 0, start = 0;
   // country代表各個國家名稱
   vector<string> country;
   // countrycount代表各個國家數量
@@ -22,29 +23,36 @@ int main() {
       if (name[i] != ' ') {
         len++;
       }
+      if (name[i] == ' ' && len == 0) {
+        start++;
+      }
       if (name[i] == ' ' && len != 0) {
         // 比較是否有重複，j代表之前的國家
         bool repeat = false;
         for (int j = 0; j < country.size(); j++) {
-          if (country[j].compare(name.substr(len, i)) == 0) {
+          if (country[j].compare(name.substr(start, len)) == 0) {
             countrycount[j]++;
             repeat = true;
-            break;
+            len = 0;
+            start = 0;
           }
         }
         if (repeat == false) {
-          country.push_back(name.substr(len, i));
+          country.push_back(name.substr(start, len));
           countrycount.push_back(1);
+          len = 0;
+          start = 0;
           break;
         }
+        break;
       }
     }
   }
-  for (int i = 0; i < country.size(); i++) {
-    for (int j = i + 1; j < country.size(); j++) {
-      if (int(country[j][0]) < int(country[i][0])) {
-        swap(country[i], country[j]);
-        swap(countrycount[i], countrycount[j]);
+  for (int i = 0; i < country.size() - 1; i++) {
+    for (int j = 0; j < country.size() - 1 - i; j++) {
+      if (country[j] > country[j + 1]) {
+        swap(country[j], country[j + 1]);
+        swap(countrycount[j], countrycount[j + 1]);
       }
     }
   }
