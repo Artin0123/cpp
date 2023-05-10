@@ -4,5 +4,4 @@ int main() {
   string filename;
   while (cin >> filename) {
   }
-  cout << filename << endl;
 }
