@@ -1,62 +1,36 @@
 #include <algorithm>
 #include <iostream>
-#include <string>
+#include <map>
 #include <vector>
 using namespace std;
+bool cmp(pair<char, int> a, pair<char, int> b) {
+  if (a.second == b.second) {
+    return a.first < b.first;
+  }
+  return a.second > b.second;
+}
 int main() {
-  // count代表輸入的數量，
-  int count = 0, len = 0, start = 0;
-  // country代表各個國家名稱
-  vector<string> country;
-  // countrycount代表各個國家數量
-  vector<int> countrycount;
-  // name代表輸入的名稱
-  string name;
-  cin >> count;
-  // k代表當下的國家
-  for (int k = 0; k <= count; k++) {
-    getline(cin, name);
-    if (name.length() == 0) {
-      continue;
-    }
-    for (int i = 0; i < name.length(); i++) {
-      if (name[i] != ' ') {
-        len++;
+  int n;
+  cin >> n;
+  cin.ignore();
+  map<char, int> count;
+  for (int i = 0; i < n; i++) {
+    string s;
+    getline(cin, s);
+    for (int j = 0; j < s.length(); j++) {
+      if (int(s[j]) >= 65 && int(s[j]) <= 90) {
+        count[int(s[j])]++;
       }
-      if (name[i] == ' ' && len == 0) {
-        start++;
-      }
-      if (name[i] == ' ' && len != 0) {
-        // 比較是否有重複，j代表之前的國家
-        bool repeat = false;
-        for (int j = 0; j < country.size(); j++) {
-          if (country[j].compare(name.substr(start, len)) == 0) {
-            countrycount[j]++;
-            repeat = true;
-            len = 0;
-            start = 0;
-          }
-        }
-        if (repeat == false) {
-          country.push_back(name.substr(start, len));
-          countrycount.push_back(1);
-          len = 0;
-          start = 0;
-          break;
-        }
-        break;
+      if (int(s[j]) >= 97 && int(s[j]) <= 122) {
+        count[int(s[j]) - 32]++;
       }
     }
   }
-  for (int i = 0; i < country.size() - 1; i++) {
-    for (int j = 0; j < country.size() - 1 - i; j++) {
-      if (country[j] > country[j + 1]) {
-        swap(country[j], country[j + 1]);
-        swap(countrycount[j], countrycount[j + 1]);
-      }
+  vector<pair<char, int>> v(count.begin(), count.end());
+  sort(v.begin(), v.end(), cmp);
+  for (int i = 0; i <= v.size(); i++) {
+    if (v[i].second != 0) {
+      cout << v[i].first << " " << v[i].second << endl;
     }
-  }
-  for (int i = 0; i < country.size(); i++) {
-    cout << country[i] << " " << countrycount[i] << endl;
   }
 }
